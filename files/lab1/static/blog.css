@@ -23,7 +23,7 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: #fff;
+    color: #ffa;
 }
 
 /* Стили для статей в основной части */
@@ -36,7 +36,7 @@ article {
     width: 30%;
     padding: 20px;
     margin-bottom: 20px;
-    background-color: #f4f4f4;
+    background-color: lightyellow;
     border: 1px solid #ddd;
 }
 
@@ -80,7 +80,7 @@ footer {
 
 /* Оформление ссылок */
 a {
-    color: #007acc;
+    color: #ff2400;
     text-decoration: none;
 }
 
