@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 import requests
 
@@ -22,6 +23,19 @@ DIRECTION_TRANSFORM = {
     'nnw': 'северо - северо - западное',
     'c': 'штиль',
 }
+
+
+def current_weather_with_apiweather(lat, lon):
+    key = '429aa38b8a3748a5b2c221901240705'
+    url = 'https://api.weatherapi.com/v1/current.json'
+    params = {'key': key, 'q': f'{lat}, {lon}'}
+    response = requests.get(url, params=params).json()
+    s = f"Город: {response['location']['name']}\n" \
+        f"Температура: {response['current']['temp_c']}\n" \
+        f"Как ощущается: {response['current']['feelslike_c']}\n" \
+        f"Ветер: {response['current']['wind_kph']}\n" \
+        f"Время: {datetime.fromtimestamp(response['current']['last_updated_epoch'])}"
+    return s
 
 
 def current_weather(lat, lon):
@@ -57,4 +71,8 @@ def current_weather(lat, lon):
 
 
 if __name__ == "__main__":
+    print("Данные Weatherapi:")
+    print(current_weather_with_apiweather(59.93, 30.31))
+
+    print("\nДанные Yandex_API:")
     print(current_weather(59.93, 30.31))  # Проверка работы для координат Санкт-Петербурга
