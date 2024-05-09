@@ -62,8 +62,10 @@ def current_weather(lat, lon):
         # полученных от API
         'pressure': data['fact']['pressure_mm'],  # TODO Реализовать вычисление давления из данных полученных от API
         'humidity': data['fact']['humidity'],  # TODO Реализовать вычисление влажности из данных полученных от API
-        'wind_speed': data['fact']['wind_speed'],  # TODO Реализовать вычисление скорости ветра из данных полученных от API
-        'wind_gust': data['fact']['wind_gust'],  # TODO Реализовать вычисление скорости порывов ветка из данных полученных от API
+        'wind_speed': data['fact']['wind_speed'],  # TODO Реализовать вычисление скорости ветра из данных полученных
+        # от API
+        'wind_gust': data['fact']['wind_gust'],  # TODO Реализовать вычисление скорости порывов ветка из данных
+        # полученных от API
         'wind_dir': DIRECTION_TRANSFORM.get(data['fact']['wind_dir']),  # Если используете Тариф «Погода на вашем
         # сайте», то закомментируйте эту строку
     }
