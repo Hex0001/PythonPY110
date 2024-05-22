@@ -18,7 +18,7 @@ import random
 
 from django.contrib import admin
 from django.http import HttpResponse
-from django.urls import path
+from django.urls import path, include
 
 from app_datetime.views import datetime_view
 from app_weather.views import weather_view
@@ -31,10 +31,9 @@ def random_view(request):
 
 
 urlpatterns = [
-    path('', shop_view),
+    path('', include('store.urls')),
+    path('', include('app_weather.urls')),
     path('admin/', admin.site.urls),
     path('random/', random_view),
-    path('datetime/', datetime_view),
-    path('product/', products_view),
-    path('weather/', weather_view)
+    path('datetime/', datetime_view)
 ]
