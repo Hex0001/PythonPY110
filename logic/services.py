@@ -71,18 +71,14 @@ def add_to_cart(id_product: str) -> bool:
     # ! cart["products"][id_product]
     # ! Далее уже сами решайте, как и в какой последовательности дальше действовать.
 
-    if id_product:
-        if id_product in cart['products']:
-            cart['products'][id_product]['count_in_cart'] += 1
-        elif id_product in DATABASE:
-            cart['products'][id_product] = DATABASE[id_product]
-            cart['products'][id_product]['count_in_cart'] = 1
-        else:
-            return False
-        with open('cart.json', mode='w', encoding='utf-8') as f:  # Создаём файл и записываем туда пустую корзину
-            json.dump(cart, f)
+    if id_product in cart['products']:
+        cart['products'][id_product] += 1
+    elif id_product in DATABASE:
+        cart['products'][id_product] = 1
     else:
         return False
+    with open('cart.json', mode='w', encoding='utf-8') as f:  # Создаём файл и записываем туда пустую корзину
+        json.dump(cart, f)
 
     # TODO Проверьте, а существует ли такой товар в корзине, если нет, то перед тем как его добавить - проверьте есть ли такой id_product товара в вашей базе данных DATABASE, чтобы уберечь себя от добавления несуществующего товара.
 
@@ -107,18 +103,20 @@ def remove_from_cart(id_product: str) -> bool:
 
     # С переменной cart функции remove_from_cart ситуация аналогичная, что с cart функции add_to_cart
 
-    if id_product:
-        if id_product in cart['products']:
-            if cart['products'][id_product]['count_in_cart'] == 1:
-                cart['products'].pop(id_product)
-            else:
-                cart['products'][id_product]['count_in_cart'] -= 1
-        else:
-            return False
-        with open('cart.json', mode='w', encoding='utf-8') as f:  # Создаём файл и записываем туда пустую корзину
-            json.dump(cart, f)
+    # if id_product in cart['products']:
+    #     if cart['products'][id_product] == 1:
+    #         cart['products'].pop(id_product)
+    #     else:
+    #         cart['products'][id_product] -= 1
+    # else:
+    #     return False
+
+    if id_product in cart['products']:
+        cart['products'].pop(id_product)
     else:
         return False
+    with open('cart.json', mode='w', encoding='utf-8') as f:  # Создаём файл и записываем туда корзину
+        json.dump(cart, f)
 
     # TODO Проверьте, а существует ли такой товар в корзине, если нет, то возвращаем False.
 
@@ -127,3 +125,17 @@ def remove_from_cart(id_product: str) -> bool:
     # TODO Не забываем записать обновленные данные cart в 'cart.json'
 
     return True
+
+
+if __name__ == "__main__":
+    # Проверка работоспособности функций view_in_cart, add_to_cart, remove_from_cart
+    # Для совпадения выходных значений перед запуском скрипта удаляйте появляющийся файл 'cart.json' в папке
+    print(view_in_cart())  # {'products': {}}
+    print(add_to_cart('1'))  # True
+    print(add_to_cart('0'))  # False
+    print(add_to_cart('1'))  # True
+    print(add_to_cart('2'))  # True
+    print(view_in_cart())  # {'products': {'1': 2, '2': 1}}
+    print(remove_from_cart('0'))  # False
+    print(remove_from_cart('1'))  # True
+    print(view_in_cart())  # {'products': {'2': 1}}
