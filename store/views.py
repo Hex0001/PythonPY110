@@ -5,7 +5,6 @@ from store.models import DATABASE
 from logic.services import filtering_category, view_in_cart, add_to_cart, remove_from_cart
 
 
-# Create your views here.
 def products_view(request):
     if request.method == 'GET':
         product_id = request.GET.get('id')
@@ -18,14 +17,15 @@ def products_view(request):
             category_key = request.GET.get("category")  # Считали 'category'
             ordered_key = request.GET.get("ordering")  # Если в параметрах есть 'ordering'
             if ordered_key:
-                if request.GET.get("reverse") and request.GET.get("reverse").lower() == 'true':  # Если в параметрах есть 'ordering' и 'reverse'=True
-                    data = filtering_category(DATABASE, category_key, ordered_key, True)  # TODO Использовать filtering_category и провести фильтрацию с параметрами category, ordering, reverse=True
-                else:  # Если не обнаружили в адресно строке ...&reverse=true, значит reverse=False
-                    data = filtering_category(DATABASE, category_key, ordered_key)  # TODO Использовать filtering_category и провести фильтрацию с параметрами category, ordering, reverse=False
+                if request.GET.get("reverse") and request.GET.get("reverse").lower() == 'true':  # Если в параметрах
+                    # есть 'ordering', есть 'reverse' и 'reverse'=True
+                    data = filtering_category(DATABASE, category_key, ordered_key, True)
+                else:
+                    data = filtering_category(DATABASE, category_key, ordered_key)
             else:
-                data = filtering_category(DATABASE, category_key)  # TODO Использовать filtering_category и провести фильтрацию с параметрами category
+                data = filtering_category(DATABASE, category_key)
 
-        # В этот раз добавляем параметр safe=False, для корректного отображения списка в JSON
+        # safe=False позволяет получать в Json любые данные, не только словари
         return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False,
                                                                  'indent': 4})
 
@@ -41,7 +41,7 @@ def products_page_view(request, page):
     if request.method == "GET":
         if isinstance(page, str):
             for data in DATABASE.values():
-                if data['html'] == page:  # Если значение переданного параметра совпадает именем html файла
+                if data['html'] == page:  # Если значение переданного параметра совпадает с именем html файла
                     with open(f'store/products/{page}.html', encoding='utf-8') as f:
                         return HttpResponse(f.read())
         elif isinstance(page, int):
@@ -56,14 +56,14 @@ def products_page_view(request, page):
 
 def cart_view(request):
     if request.method == "GET":
-        data = view_in_cart()  # TODO Вызвать ответственную за это действие функцию
+        data = view_in_cart()
         return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
                                                      'indent': 4})
 
 
 def cart_add_view(request, id_product):
     if request.method == "GET":
-        result = add_to_cart(id_product) # TODO Вызвать ответственную за это действие функцию и передать необходимые параметры
+        result = add_to_cart(id_product)
         if result:
             return JsonResponse({"answer": "Продукт успешно добавлен в корзину"},
                                 json_dumps_params={'ensure_ascii': False})
@@ -75,7 +75,7 @@ def cart_add_view(request, id_product):
 
 def cart_del_view(request, id_product):
     if request.method == "GET":
-        result = remove_from_cart(id_product) # TODO Вызвать ответственную за это действие функцию и передать необходимые параметры
+        result = remove_from_cart(id_product)
         if result:
             return JsonResponse({"answer": "Продукт успешно удалён из корзины"},
                                 json_dumps_params={'ensure_ascii': False})

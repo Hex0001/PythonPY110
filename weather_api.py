@@ -62,24 +62,16 @@ def current_weather_with_apiweather(lat, lon):
 #     response = requests.get(url, headers=headers)
 #     data = response.json()
 #
-#     # Данная реализация приведена для тарифа «Тестовый», если у вас Тариф «Погода на вашем сайте», то закомментируйте
-#     # пару строк указанных ниже
 #     result = {
-#         'city': data['geo_object']['locality']['name'],  # Если используете Тариф «Погода на вашем сайте», то
-#         # закомментируйте эту строку
-#         'time': datetime.fromtimestamp(data['fact']['uptime']).strftime("%H:%M"),  # Если используете Тариф «Погода на
-#         # вашем сайте», то закомментируйте эту строку
-#         'temp': data['fact']['temp'],  # TODO Реализовать вычисление температуры из данных полученных от API
-#         'feels_like_temp': data['fact']['feels_like'],  # TODO Реализовать вычисление ощущаемой температуры из данных
-#         # полученных от API
-#         'pressure': data['fact']['pressure_mm'],  # TODO Реализовать вычисление давления из данных полученных от API
-#         'humidity': data['fact']['humidity'],  # TODO Реализовать вычисление влажности из данных полученных от API
-#         'wind_speed': data['fact']['wind_speed'],  # TODO Реализовать вычисление скорости ветра из данных полученных
-#         # от API
-#         'wind_gust': data['fact']['wind_gust'],  # TODO Реализовать вычисление скорости порывов ветка из данных
-#         # полученных от API
-#         'wind_dir': DIRECTION_TRANSFORM.get(data['fact']['wind_dir']),  # Если используете Тариф «Погода на вашем
-#         # сайте», то закомментируйте эту строку
+#         'city': data['geo_object']['locality']['name'],
+#         'time': datetime.fromtimestamp(data['fact']['uptime']).strftime("%H:%M"),
+#         'temp': data['fact']['temp'],
+#         'feels_like_temp': data['fact']['feels_like'],
+#         'pressure': data['fact']['pressure_mm'],
+#         'humidity': data['fact']['humidity'],
+#         'wind_speed': data['fact']['wind_speed'],
+#         'wind_gust': data['fact']['wind_gust'],
+#         'wind_dir': DIRECTION_TRANSFORM.get(data['fact']['wind_dir']),
 #     }
 #     return result
 
