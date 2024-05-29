@@ -32,9 +32,9 @@ def products_view(request):
 
 def shop_view(request):
     if request.method == 'GET':
-        with open('store/shop.html', 'r', encoding='utf-8') as f:
-            result_str = f.read()
-            return HttpResponse(result_str)
+        return render(request,
+                      'store/shop.html',
+                      context={"products": DATABASE.values()})
 
 
 def products_page_view(request, page):
@@ -57,8 +57,17 @@ def products_page_view(request, page):
 def cart_view(request):
     if request.method == "GET":
         data = view_in_cart()
-        return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
-                                                     'indent': 4})
+        if request.GET.get('format') and request.GET.get('format').lower() == 'json':
+            return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
+                                                         'indent': 4})
+
+        products = []  # Список продуктов
+        for product_id, quantity in data['products'].items():
+            product = DATABASE[product_id]
+            product['quantity'] = quantity  # Записываем количество товара в параметры продукта
+            product['price_total'] = f"{quantity * product['price_after']:.2f}"  # Общая цена
+            products.append(product)
+        return render(request, "store/cart.html", context={"products": products})
 
 
 def cart_add_view(request, id_product):
