@@ -1,12 +1,14 @@
 import json
 import os
+import random
+
 from store.models import DATABASE
 
 
 def filtering_category(database: dict[str, dict],
                        category_key: [None, str] = None,
                        ordering_key: [None, str] = None,
-                       reverse: bool = False):
+                       reverse: bool = False) -> list[dict]:
     """
     Функция фильтрации данных по параметрам
 
@@ -26,6 +28,20 @@ def filtering_category(database: dict[str, dict],
     if ordering_key is not None:
         result.sort(key=lambda x: x[ordering_key], reverse=reverse)  # Сортировка по ordering_key и параметру reverse
     return result
+
+
+def same_category_filter(database: dict[str, dict], product: dict) -> list[dict]:
+    """
+    Функция фильтрует значения по категории продукта, удаляет из списка сам продукт и перемешивает результат
+    :param database: База данных (словарь словарей из models.py).
+    :param product: Продукт, по категории которого фильтруются остальные продукты.
+    :return: list[dict] список товаров с их характеристиками, попавших под условия фильтрации. Если нет таких элементов,
+    то возвращается пустой список
+    """
+    same_category = filtering_category(database, product['category'])
+    same_category.remove(product)  # Удаляем лишний товар для показа только оставшихся товаров из категории
+    random.shuffle(same_category)
+    return same_category
 
 
 def view_in_cart() -> dict:

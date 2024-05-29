@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
 from store.models import DATABASE
-from logic.services import filtering_category, view_in_cart, add_to_cart, remove_from_cart
+from logic.services import filtering_category, view_in_cart, add_to_cart, remove_from_cart, same_category_filter
 
 
 def products_view(request):
@@ -31,26 +31,41 @@ def products_view(request):
 
 
 def shop_view(request):
-    if request.method == 'GET':
-        return render(request,
-                      'store/shop.html',
-                      context={"products": DATABASE.values()})
+    if request.method == "GET":
+        # Обработка фильтрации из параметров запроса
+        category_key = request.GET.get("category")
+        if ordering_key := request.GET.get("ordering"):  # Моржовый оператор
+            if request.GET.get("reverse") in ('true', 'True'):
+                data = filtering_category(DATABASE, category_key, ordering_key,
+                                          True)
+            else:
+                data = filtering_category(DATABASE, category_key, ordering_key)
+        else:
+            data = filtering_category(DATABASE, category_key)
+        return render(request, 'store/shop.html',
+                      context={"products": data,
+                               "category": category_key})
 
 
 def products_page_view(request, page):
     if request.method == "GET":
         if isinstance(page, str):
             for data in DATABASE.values():
-                if data['html'] == page:  # Если значение переданного параметра совпадает с именем html файла
-                    with open(f'store/products/{page}.html', encoding='utf-8') as f:
-                        return HttpResponse(f.read())
-        elif isinstance(page, int):
-            if str(page) in DATABASE:
-                with open(f'store/products/{DATABASE[str(page)]["html"]}.html', encoding='utf-8') as f:
-                    return HttpResponse(f.read())
+                if data['html'] == page:
+                    same_category = same_category_filter(DATABASE, data)
+                    return render(request, "store/product.html",
+                                  context={"product": data,
+                                           "same_category": same_category})
 
-        # Если за всё время поиска не было совпадений, то значит по данному имени нет соответствующей
-        # страницы товара и можно вернуть ответ с ошибкой HttpResponse(status=404)
+        elif isinstance(page, int):
+            # Обрабатываем условие того, что пытаемся получить страницу товара по его id
+            data = DATABASE.get(str(page))  # Получаем какой странице соответствует данный id
+            if data:
+                same_category = same_category_filter(DATABASE, data)
+                return render(request, "store/product.html",
+                              context={"product": data,
+                                       "same_category": same_category})
+
         return HttpResponse(status=404)
 
 

@@ -6,7 +6,7 @@ from .views import (products_view, shop_view, products_page_view,
 app_name = 'store'
 
 urlpatterns = [
-    path('', shop_view),
+    path('', shop_view, name="shop_view"),
     path('cart/', cart_view),
     path('cart/add/<str:id_product>', cart_add_view),
     path('cart/del/<str:id_product>', cart_del_view),
