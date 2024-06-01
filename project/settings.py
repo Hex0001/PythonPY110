@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app_datetime',
     'store',
-    'app_weather'
+    'app_weather',
+    'app_login'
 ]
 
 MIDDLEWARE = [

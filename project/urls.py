@@ -31,6 +31,7 @@ def random_view(request):
 urlpatterns = [
     path('', include('store.urls')),
     path('', include('app_weather.urls')),
+    path('', include('app_login.urls')),
     path('admin/', admin.site.urls),
     path('random/', random_view),
     path('datetime/', datetime_view)
