@@ -35,6 +35,9 @@ def wishlist_add_json(request, id_product: str):
                             json_dumps_params={'ensure_ascii': False})
 
 
+@login_required(login_url='login:login_view')  # Чтобы при повторном нажатии на heart, если JS до этого не перевёл
+# неавторизованного пользователя на страницу login, не произошло создания нового словаря {"": {'products': []}} после
+# обращения к view_in_wishlist
 def wishlist_del_json(request, id_product: str):
     """
     Удаление продукта из избранного и возвращение информации об успехе или неудаче в JSON
@@ -50,6 +53,8 @@ def wishlist_del_json(request, id_product: str):
                             json_dumps_params={'ensure_ascii': False})
 
 
+@login_required(login_url='login:login_view')  # Чтобы, не произошло создания нового словаря {"": {'products': []}}
+# после обращения неавторизованного пользователя к view_in_wishlist, когда файла wishlist.json ещё не создан
 def wishlist_json(request):
     """
     Просмотр всех продуктов в избранном для пользователя и возвращение этого в JSON
@@ -65,6 +70,8 @@ def wishlist_json(request):
                             json_dumps_params={'ensure_ascii': False})
 
 
+@login_required(login_url='login:login_view')  # Чтобы, не произошло создания нового словаря {"": {'products': []}}
+# после обращения неавторизованного пользователя к view_in_wishlist, когда файла wishlist.json ещё не создан
 def wishlist_remove_view(request, id_product):
     if request.method == "GET":
         result = remove_from_wishlist(request, id_product)

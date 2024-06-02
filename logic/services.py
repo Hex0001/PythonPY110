@@ -138,7 +138,11 @@ def view_in_wishlist(request) -> dict:
             return json.load(f)
 
     user = get_user(request).username  # Получаем авторизованного пользователя
-    wishlist = {user: {'products': []}}  # Создаем пустой список избранного
+    if user:
+        wishlist = {user: {'products': []}}  # Создаем пустой список избранного, если пользователь авторизован
+    else:
+        wishlist = {}  # Создаем пустой список избранного, если пользователь не авторизован, но каким-то образом
+        # попал в данную функцию
     with open('wishlist.json', mode='x', encoding='utf-8') as f:   # Записываем пустой список избранного
         json.dump(wishlist, f)
 
