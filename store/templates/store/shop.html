@@ -212,6 +212,11 @@
 			fetch('/wishlist/api/add/' + productId, { method: 'GET' })
 				.then(function (response) {
 					if (response.ok) {
+					    if (response.redirected) {
+                            console.log('Произошел редирект на:', response.url);
+                              window.location.href = response.url; // Пример перенаправления на другую страницу
+                              return; // Прерываем выполнение функции
+                        }
 						showPopupMessage(productId, 'Продукт успешно добавлен в избранное');
 						linkWish.classList.remove('ion-ios-heart-empty');
 						linkWish.classList.add('ion-ios-heart');
